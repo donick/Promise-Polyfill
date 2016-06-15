@@ -8,7 +8,7 @@ ES6 PromisePolyfill for browsers do not support ES6 Promise
 
   Download [promisepolyfill.min.js](https://github.com/donick/PromisePolyfill/blob/master/dist/promisepolyfill.min.js)
   
-  in browser: IE6+, Chrome, Firefox, Safari, Opera
+`In browser: (support IE6+, Chrome, Firefox, Safari, Opera)`
   ```
   load js file in html: 
   <script src="https://github.com/donick/PromisePolyfill/blob/master/dist/promisepolyfill.min.js"></script>
@@ -32,11 +32,11 @@ ES6 PromisePolyfill for browsers do not support ES6 Promise
   //p.catch(function(v){//do something});
   p["catch"](function(v){//do something});
   ```
-  in node.js:
+`In node.js:`
   ```
   var promisepolyfill = require('./promisepolyfill.min.js');
   ```
-  in AMD:
+`In AMD:`
   ```
   define(['promisepolyfill'], function(promise) {
     //do something
