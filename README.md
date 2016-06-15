@@ -10,10 +10,10 @@ ES6 PromisePolyfill for browsers do not support ES6 Promise
       p = new Promise(function(resolve, reject){
           setTimeout(reject, 1000, 'reject');
       });
-  
-  *p['catch']*(function(v){
-    //do something
-  });
+      
+  //p.catch(function(v){//do something});
+
+  p['catch'](function(v){//do something});
   ```
   
 #####How to use?
