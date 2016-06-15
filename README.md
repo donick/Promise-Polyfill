@@ -6,7 +6,12 @@ ES6 PromisePolyfill for browsers do not support ES6 Promise
   > **Tip:** `catch` is reserved wording in IE6-IE8.
   If code working on them, using following code instead:
   ```
-  promiseInstace['catch'](function(v){
+  var Promise = PromisePolyfill();
+      p = new Promise(function(resolve, reject){
+          setTimeout(reject, 1000, 'reject');
+      });
+  
+  *p['catch']*(function(v){
     //do something
   });
   ```
