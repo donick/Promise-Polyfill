@@ -8,7 +8,7 @@ ES6 PromisePolyfill for browsers do not support ES6 Promise
 
   Download [promisepolyfill.min.js](https://github.com/donick/PromisePolyfill/blob/master/dist/promisepolyfill.min.js)
   
-**`In browser: (support IE6+, Chrome, Firefox, Safari, Opera)`**
+**`In browser: (supports IE6+, Chrome, Firefox, Safari, Opera)`**
   ```
   load js file in html: 
   <script src="https://github.com/donick/PromisePolyfill/blob/master/dist/promisepolyfill.min.js"></script>
