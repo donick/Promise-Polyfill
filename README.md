@@ -7,6 +7,7 @@ ES6 PromisePolyfill for browsers do not support ES6 Promise
   If code working on them, using following code instead:
   ```
   promiseInstace['catch'](function(v){
+    //do something
   });
   ```
   
