@@ -30,7 +30,7 @@ ES6 PromisePolyfill for browsers do not support ES6 Promise
       });
   
   //p.catch(function(v){//do something});
-  p["catch"](function(v){//do something});
+  p['catch'](function(v){//do something});
   ```
 **`In node.js:`**
   ```
