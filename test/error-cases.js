@@ -61,3 +61,33 @@
     });
 
 })();
+
+/*
+Uncaught (in promise) reject-err
+Uncaught (in promise) reject-before-resolve
+Uncaught (in promise) throw-err
+Uncaught (in promise) throw-before-resolve
+Uncaught (in promise) throw-before-reject
+✔ Uncaught (in promise) reject-then-non-rejecter
+✔ Uncaught (in promise) reject-catch-non-rejecter
+Uncaught (in promise) throw-then-err
+Uncaught (in promise) throw-then-err
+Uncaught (in promise) throw-in-then-resolver
+Uncaught (in promise) throw-in-then-rejecter
+Uncaught (in promise) throw-in-catch-rejecter
+
+
+
+Uncaught (in promise) reject-err
+✔ Uncaught (in promise) reject-then-non-rejecter
+✔ Uncaught (in promise) reject-catch-non-rejecter
+Uncaught (in promise) reject-before-resolve
+Uncaught (in promise) throw-err
+Uncaught (in promise) throw-before-resolve
+Uncaught (in promise) throw-before-reject
+Uncaught (in promise) throw-then-err
+Uncaught (in promise) throw-then-err
+Uncaught (in promise) throw-in-then-resolver
+Uncaught (in promise) throw-in-then-rejecter
+Uncaught (in promise) throw-in-catch-rejecter
+*/
