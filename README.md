@@ -1,10 +1,10 @@
 # PromisePolyfill
-ES6 PromisePolyfill for browsers do not support ES6 Promise
+PromisePolyfill for browsers do not support ES6 Promise
 
-#####ES6 Promise usage
+##ES6 Promise usage
   https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
 
-#####How to use PromisePolyfill?
+##How to use PromisePolyfill?
 
   Download [promisepolyfill.min.js](https://github.com/donick/PromisePolyfill/blob/master/dist/promisepolyfill.min.js)
   
@@ -42,5 +42,5 @@ ES6 PromisePolyfill for browsers do not support ES6 Promise
     //do something
   });
   ```
-#####License
+##License
   [MIT License](https://github.com/donick/PromisePolyfill/blob/master/LICENSE)
