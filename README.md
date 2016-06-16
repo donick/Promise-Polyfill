@@ -10,7 +10,7 @@ PromisePolyfill for browsers do not support ES6 Promise
   
 **`In browser: (supports IE6+, Chrome, Firefox, Safari, Opera)`**
   ```
-  load js file in html: 
+  load promisepolyfill.js in html: 
   <script src="https://github.com/donick/PromisePolyfill/blob/master/dist/promisepolyfill.min.js"></script>
   
   //get Promise Object
