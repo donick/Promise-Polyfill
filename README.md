@@ -19,7 +19,8 @@ PromisePolyfill for browsers do not support ES6 Promise
   //get Promise Object of promisepolyfill
   var Promise = PromisePolyfill();
   
-  //if native Promise is not exist, using PromisePolyfill instead of global.Promise(window.Promise or self.Promise in worker)
+  //global.Promise(window.Promise or self.Promise in worker)
+  //if native Promise is not exist, using PromisePolyfill instead of global.Promise
   //otherwise keep using native Promise on global.Promise
   PromisePolyfill(true);
   ```
