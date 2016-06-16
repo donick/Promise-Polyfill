@@ -13,7 +13,7 @@ PromisePolyfill for browsers do not support ES6 Promise
   load promisepolyfill.js in html: 
   <script src="https://github.com/donick/PromisePolyfill/blob/master/dist/promisepolyfill.min.js"></script>
   
-  //get Promise Object
+  //get Promise Object of promisepolyfill
   var Promise = PromisePolyfill();
   
   //if native Promise is not exist, using PromisePolyfill instead of global.Promise
