@@ -42,6 +42,20 @@
     }
 
     /**
+     * check global whether have native promise
+     * @return {Boolean} result
+     */
+    function haveNativePromise(){
+        var NP = G.Promise;
+
+        if(isFunction(NP) && NP.toString().indexOf('[native code]')){
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * get promise id
      * @return {String} promise id
      */
@@ -568,6 +582,11 @@
     if(G){
         G[exportName] = function(force){
             if(force){
+                if(haveNativePromise()){
+                    //if have native promise, choose native promise
+                    return G.Promise;
+                }
+
                 G.Promise = Promise;
             }
 
