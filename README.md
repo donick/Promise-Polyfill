@@ -3,6 +3,9 @@ PromisePolyfill for browsers do not support ES6 Promise
 
 ##ES6 Promise usage
   https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
+  
+##ES6 Promise standard
+  http://www.ecma-international.org/ecma-262/6.0/#sec-promise-objects
 
 ##How to use PromisePolyfill?
 
