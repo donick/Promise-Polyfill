@@ -19,7 +19,7 @@ PromisePolyfill for browsers do not support ES6 Promise
   //get Promise Object of promisepolyfill
   var Promise = PromisePolyfill();
   
-  //global.Promise(window.Promise or self.Promise in worker)
+  //parameter set to true. change the  global.Promise(window.Promise or self.Promise in worker)
   //if native Promise is not exist, using PromisePolyfill instead of global.Promise
   //otherwise keep using native Promise on global.Promise
   PromisePolyfill(true);
@@ -28,7 +28,7 @@ PromisePolyfill for browsers do not support ES6 Promise
  >**Note:** `catch` is reserved wording in IE6-IE8. If code working on them, using following solution instead.
   
   ```
-  var Promise = PromisePolyfill();
+  var Promise = PromisePolyfill(),
       p = new Promise(function(resolve, reject){
           setTimeout(reject, 1000, 'reject');
       });
