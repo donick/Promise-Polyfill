@@ -5,8 +5,8 @@
  * @author Donick Li <donick.li@gmail.com>
  * @license Released under the MIT license
  * https://github.com/donick/PromisePolyfill
- * @version v1.0.0
- * Date: 2016-06-09T18:02Z
+ * @version v1.0.1
+ * Date: 2016-06-17T23:42Z
  */
 (function(){
     'use strict';
@@ -197,15 +197,9 @@
      * @return {Object}      promise instance
      */
     function factory(fn){
-        var P = new Promise(function(resolve, reject){
-                P.callback = function(){
-                    fn(resolve, reject);
-                };
-
+        return new Promise(function(resolve, reject){
                 fn(resolve, reject);
             });
-
-        return P;
     }
 
     /**
@@ -457,26 +451,28 @@
         var me = this,
             info = getInfo(me),
             status = info.status,
-            P;
+            callback = function(){};
 
         if(status === states[0]){
             //add callback to the previous promise
             //after its status changed, this callback will be invoked
             info.next.push(function(){
-                if(P.callback){
-                    P.callback();
-                }
+                callback();
             });
         }
-        
-        P = factory(function(resolve, reject){
+
+        function fn(resolve, reject){
             var info = getInfo(me),
                 status = info.status,
                 val = info.value;
 
-            if(status !== states[0]){
+            if(status === states[0]){
                 //if status of previous promise had changed
-                delete P.callback;
+                callback = function(){
+                    fn(resolve, reject);
+                };
+
+                return;
             }
             
             if(status === states[1]){
@@ -506,9 +502,9 @@
                     reject(val);
                 }
             }
-        });
+        }
 
-        return P;
+        return factory(fn);
     }
 
     /**
@@ -520,23 +516,25 @@
         var me = this,
             info = getInfo(me),
             status = info.status,
-            P;
+            callback = function(){};
 
         if(status === states[0]){
             info.next.push(function(){
-                if(P.callback){
-                    P.callback();
-                }
+                callback();
             });
         }
 
-        P = factory(function(resolve, reject){
+        function fn(resolve, reject){
             var info = getInfo(me),
                 status = info.status,
                 val = info.value;
 
-            if(status !== states[0]){
-                delete P.callback;
+            if(status === states[0]){
+                callback = function(){
+                    fn(resolve, reject);
+                };
+
+                return;
             }
 
             if(status === states[2]){
@@ -551,9 +549,9 @@
                     reject(val);
                 }
             }
-        });
+        }
 
-        return P;
+        return factory(fn);
     }
 
     Promise.all = all;
