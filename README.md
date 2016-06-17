@@ -1,5 +1,5 @@
 # PromisePolyfill
-PromisePolyfill for browsers do not support ES6 Promise
+PromisePolyfill for browsers do not support ES6 Promise, such as IE<=11, Safari<=7.1
 
 ##ES6 Promise usage
   https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
