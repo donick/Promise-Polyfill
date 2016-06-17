@@ -369,8 +369,6 @@
                 reject(2);
             });
 
-        //p1.catch(function(){});
-
         Promise.all([p, 3,4,5, p1]).then(
             function(v){},
             function(v){
@@ -388,8 +386,6 @@
             p1 = new Promise(function(resolve, reject){
                 reject(2);
             });
-
-        //p1.catch(function(){});
 
         Promise.all([p, 3,4,5, p1]).catch(
             function(v){
@@ -428,8 +424,6 @@
                 reject('reject');
             });
 
-        //p.catch(function(){});
-
         Promise.race([p, 1,2,3,4,5]).then(
             function(v){
                 //ok(v === 1);
@@ -444,8 +438,6 @@
                 reject('reject');
             });
 
-        //p1.catch(function(){});
-
         Promise.race([p1, 1,2,3,4,5]).catch(
             function(v){
                 ok(v === 'reject', 'catch-reject');
@@ -457,8 +449,6 @@
                 reject('reject');
             });
 
-        //p2.catch(function(){});
-
         Promise.race([p2, 1,2,3,4,5])
             .then()
             .catch(function(v){
@@ -469,8 +459,6 @@
         var p3 = new Promise(function(resolve, reject){
                 reject('reject');
             });
-
-        //p3.catch(function(){});
 
         Promise.race([1, p3, 2,3,4,5]).then(
             function(v){
