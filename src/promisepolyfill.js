@@ -467,7 +467,7 @@
                 val = info.value;
 
             if(status === states[0]){
-                //if status of previous promise had changed
+                //set callback with resolve and reject of context
                 callback = function(){
                     fn(resolve, reject);
                 };
@@ -530,6 +530,7 @@
                 val = info.value;
 
             if(status === states[0]){
+                //set callback with resolve and reject of context
                 callback = function(){
                     fn(resolve, reject);
                 };
