@@ -5,8 +5,8 @@
  * @author Donick Li <donick.li@gmail.com>
  * @license Released under the MIT license
  * https://github.com/donick/PromisePolyfill
- * @version v1.0.1
- * Date: 2016-06-17T23:42Z
+ * @version v1.1.0
+ * Date: 2016-06-21T11:00Z
  */
 (function(){
     'use strict';
@@ -466,6 +466,12 @@
                 status = info.status,
                 val = info.value;
 
+            if(isThenable(val)){
+                val.then(onResolved, onRejected);
+
+                return;
+            }
+
             if(status === states[0]){
                 //set callback with resolve and reject of context
                 callback = function(){
@@ -478,21 +484,27 @@
             if(status === states[1]){
                 if(isFunction(onResolved)){
                     try{
-                        resolve(onResolved(val));
+                        val = onResolved(val);
+
+                        handleThenable(val, resolve, reject);
                     }catch(e){
                         reject(e);
 
                         return;
                     }
+                }else{
+                    resolve(val);
                 }
 
-                resolve(val);
+                //resolve(val);
             }else if(status === states[2]){
                 //if onRejected was not provided, pass val to next then/catch
                 if(isFunction(onRejected)){
                     try{
                         //resolved this reject, and pass val to next then
-                        resolve(onRejected(val));
+                        val = onRejected(val);
+
+                        handleThenable(val, resolve, reject);
                     }catch(e){
                         //catch error in onRejected
                         reject(e);
@@ -529,6 +541,12 @@
                 status = info.status,
                 val = info.value;
 
+            if(isThenable(val)){
+                val.catch(onRejected);
+
+                return;
+            }
+
             if(status === states[0]){
                 //set callback with resolve and reject of context
                 callback = function(){
@@ -541,7 +559,9 @@
             if(status === states[2]){
                 if(isFunction(onRejected)){
                     try{
-                        resolve(onRejected(val));
+                        val = onRejected(val);
+
+                        handleThenable(val, resolve, reject);
                     }catch(e){
                         //catch error in onRejected
                         reject(e);
@@ -553,6 +573,26 @@
         }
 
         return factory(fn);
+    }
+
+    /**
+     * handle thenable for returning new-promise in then
+     * @param  {Object} val     value from then
+     * @param  {Function} resolve resolver callback
+     * @param  {Function} reject  rejecter callback
+     */
+    function handleThenable(val, resolve, reject){
+        if(isThenable(val)){
+            val.then(
+                function(v){
+                    resolve(v);
+                },
+                function(v){
+                    reject(v);
+                });
+        }else{
+            resolve(val);
+        }
     }
 
     Promise.all = all;
