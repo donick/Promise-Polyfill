@@ -369,6 +369,8 @@
                 reject(2);
             });
 
+        //p1.catch(function(){});
+
         Promise.all([p, 3,4,5, p1]).then(
             function(v){},
             function(v){
@@ -386,6 +388,8 @@
             p1 = new Promise(function(resolve, reject){
                 reject(2);
             });
+
+        //p1.catch(function(){});
 
         Promise.all([p, 3,4,5, p1]).catch(
             function(v){
@@ -424,6 +428,8 @@
                 reject('reject');
             });
 
+        //p.catch(function(){});
+
         Promise.race([p, 1,2,3,4,5]).then(
             function(v){
                 //ok(v === 1);
@@ -438,6 +444,8 @@
                 reject('reject');
             });
 
+        //p1.catch(function(){});
+
         Promise.race([p1, 1,2,3,4,5]).catch(
             function(v){
                 ok(v === 'reject', 'catch-reject');
@@ -449,6 +457,8 @@
                 reject('reject');
             });
 
+        //p2.catch(function(){});
+
         Promise.race([p2, 1,2,3,4,5])
             .then()
             .catch(function(v){
@@ -459,6 +469,8 @@
         var p3 = new Promise(function(resolve, reject){
                 reject('reject');
             });
+
+        //p3.catch(function(){});
 
         Promise.race([1, p3, 2,3,4,5]).then(
             function(v){
@@ -538,5 +550,118 @@
                 done2();
             }
         );
+    });
+
+    test('cascaded-promises', function(assert){
+        var done = assert.async(),
+            done1 = assert.async(),
+            done2 = assert.async(),
+            done3 = assert.async(),
+            done4 = assert.async(),
+            done5 = assert.async(),
+            done6 = assert.async(),
+            done7 = assert.async();
+
+        new Promise(function(resolve, reject){
+            resolve();
+        }).then(function(){
+            return new Promise(function(resolve, reject){
+                resolve('111111');
+            });
+        }).then(function(v){
+            ok(v === '111111', 'sync');
+            done();
+        });
+
+
+        new Promise(function(resolve, reject){
+             setTimeout(function(){
+                  resolve();
+             }, 10);
+        }).then(function(){
+             return new Promise(function(resolve, reject){
+                 setTimeout(function(){
+                      resolve('111111');
+                 }, 10);
+             });
+        }).then(function(v){
+            ok(v === '111111', 'async');
+            done1();
+        });
+
+        new Promise(function(resolve, reject){
+             setTimeout(function(){
+                  resolve();
+             }, 10);
+        }).then(function(){
+             return new Promise(function(resolve, reject){
+                  resolve('111111');
+             });
+        }).then(function(v){
+            ok(v === '111111', 'sync-async');
+            done2();
+        });
+
+        new Promise(function(resolve, reject){
+            resolve();
+        }).then(function(){
+             return new Promise(function(resolve, reject){
+                 setTimeout(function(){
+                      resolve('111111');
+                 }, 10);
+             });
+        }).then(function(v){
+            ok(v === '111111', 'async-sync');
+            done3();
+        });
+
+
+        new Promise(function(resolve, reject){
+            resolve();
+        }).then(function(){
+             return new Promise(function(resolve, reject){
+                 setTimeout(function(){
+                      reject('222222');
+                 }, 10);
+             });
+        }).then(null, function(v){
+            ok(v === '222222', 'reject-async');
+            done4();
+        });
+
+        new Promise(function(resolve, reject){
+            resolve();
+        }).then(function(){
+             return new Promise(function(resolve, reject){
+                reject('222222');
+             });
+        }).then(null, function(v){
+            ok(v === '222222', 'reject-sync');
+            done5();
+        });
+
+        new Promise(function(resolve, reject){
+            resolve();
+        }).then(function(){
+             return new Promise(function(resolve, reject){
+                reject('333333');
+             });
+        }).catch(function(v){
+            ok(v === '333333', 'catch-reject-sync');
+            done6();
+        });
+
+        new Promise(function(resolve, reject){
+            resolve();
+        }).then(function(){
+             return new Promise(function(resolve, reject){
+                 setTimeout(function(){
+                    reject('333333');
+                },10);
+             });
+        }).catch(function(v){
+            ok(v === '333333', 'catch-reject-async');
+            done7();
+        });
     });
 }());
