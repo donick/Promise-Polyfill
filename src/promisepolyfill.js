@@ -489,8 +489,7 @@
                         handleThenable(val, resolve, reject);
                     }catch(e){
                         reject(e);
-
-                        return;
+                        //return;
                     }
                 }else{
                     resolve(val);
