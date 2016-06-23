@@ -5,8 +5,8 @@
  * @author Donick Li <donick.li@gmail.com>
  * @license Released under the MIT license
  * https://github.com/donick/PromisePolyfill
- * @version v1.1.0
- * Date: 2016-06-21T11:00Z
+ * @version v1.1.1
+ * Date: 2016-06-23T21:21Z
  */
 (function(){
     'use strict';
@@ -466,12 +466,6 @@
                 status = info.status,
                 val = info.value;
 
-            if(isThenable(val)){
-                val.then(onResolved, onRejected);
-
-                return;
-            }
-
             if(status === states[0]){
                 //set callback with resolve and reject of context
                 callback = function(){
@@ -539,12 +533,6 @@
             var info = getInfo(me),
                 status = info.status,
                 val = info.value;
-
-            if(isThenable(val)){
-                val.catch(onRejected);
-
-                return;
-            }
 
             if(status === states[0]){
                 //set callback with resolve and reject of context
