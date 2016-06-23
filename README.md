@@ -9,12 +9,12 @@ Promise-Polyfill for browsers do not support ES6 Promise, such as IE<=11, Safari
 
 ##How to use Promise-Polyfill?
 
-  Download [promisepolyfill.min.js](https://github.com/donick/PromisePolyfill/blob/master/dist/promisepolyfill.min.js)
+  Download [promisepolyfill.min.js](https://github.com/donick/Promise-Polyfill/blob/master/dist/promisepolyfill.min.js)
   
 **`In browser: (supports IE6+, Chrome, Firefox, Safari, Opera)`**
   ```
   load promisepolyfill.js in html: 
-  <script src="https://github.com/donick/PromisePolyfill/blob/master/dist/promisepolyfill.min.js"></script>
+  <script src="https://github.com/donick/Promise-Polyfill/blob/master/dist/promisepolyfill.min.js"></script>
   
   //get Promise Object of promisepolyfill
   var Promise = PromisePolyfill();
@@ -47,4 +47,4 @@ Promise-Polyfill for browsers do not support ES6 Promise, such as IE<=11, Safari
   });
   ```
 ##License
-  [MIT License](https://github.com/donick/PromisePolyfill/blob/master/LICENSE)
+  [MIT License](https://github.com/donick/Promise-Polyfill/blob/master/LICENSE)
