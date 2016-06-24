@@ -5,8 +5,8 @@
  * @author Donick Li <donick.li@gmail.com>
  * @license Released under the MIT license
  * https://github.com/donick/Promise-Polyfill
- * @version v1.1.4
- * Date: 2016-06-24T23:52Z
+ * @version v1.1.5
+ * Date: 2016-06-25T0:21Z
  */
 
 /**
@@ -181,7 +181,7 @@
             });
 
             if (!followed) {
-                throw val;
+                throw '(in promise) ' + val;
             } else {
                 notifyNext(id);
             }
@@ -195,13 +195,19 @@
                 fn(cbResolve, cbReject);
             } catch (e) {
                 if (info.status === states[1]) {
-                    //promise had been resolved, avoid the error
+                    //promise had been resolved, ignore the error
                     return;
                 }
 
                 if (followed) {
                     cbReject(e);
                 } else {
+                    if (info.status === states[2]) {
+                        //catch from cbReject
+                        throw e;
+                    }
+
+                    //syntax error from fn
                     throw '(in promise) ' + e;
                 }
             }
