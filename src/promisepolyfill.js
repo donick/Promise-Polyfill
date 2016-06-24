@@ -5,8 +5,8 @@
  * @author Donick Li <donick.li@gmail.com>
  * @license Released under the MIT license
  * https://github.com/donick/Promise-Polyfill
- * @version v1.1.3
- * Date: 2016-06-24T22:30Z
+ * @version v1.1.4
+ * Date: 2016-06-24T23:52Z
  */
 
 /**
@@ -459,6 +459,10 @@
      */
 
     function resolve(val) {
+        if(isThenable(val)){
+            return val;
+        }
+
         return factory(function(resolve, reject) {
             resolve(val);
         });
