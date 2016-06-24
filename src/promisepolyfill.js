@@ -1,13 +1,36 @@
 /*!
- * @overview PromisePolyfill JavaScript Library
+ * @overview Promise-Polyfill JavaScript Library
  *
  * @copyright Donick Li
  * @author Donick Li <donick.li@gmail.com>
  * @license Released under the MIT license
  * https://github.com/donick/PromisePolyfill
  * @version v1.1.1
- * Date: 2016-06-23T21:21Z
+ * Date: 2016-06-24T16:30Z
  */
+
+/**
+ * work-fllow: pending
+ * new-promise: A <return A instance>
+ *     next-then/catch: <add-callback to A.next>
+ *         next-then/catch: new-promise: B
+ *             A: <invoke-constructor-callback>
+ *                 A is resolved/rejected
+ *                     A->notifyNext: <set timer to invoke callbacks>
+ *                         B: <invoke-constructor-callback>
+ *                             B: <set next-callback with its context for A>
+ *                                 A->notifyNext: timer-coming invoke all next-callbacks
+ *                                     invoke B's invoke-constructor-callback
+ */
+
+/**
+ * work-fllow: resolved/rejected
+ * A.then: A is resolved/rejected
+ *     next-then/catch: new-promise: B
+ *         B: <invoke-constructor-callback>
+ *             B: resolve or reject self with its value
+ */
+
 (function(){
     'use strict';
 
@@ -471,11 +494,7 @@
                 callback = function(){
                     fn(resolve, reject);
                 };
-
-                return;
-            }
-            
-            if(status === states[1]){
+            }else if(status === states[1]){
                 if(isFunction(onResolved)){
                     try{
                         val = onResolved(val);
@@ -483,13 +502,10 @@
                         handleThenable(val, resolve, reject);
                     }catch(e){
                         reject(e);
-                        //return;
                     }
                 }else{
                     resolve(val);
                 }
-
-                //resolve(val);
             }else if(status === states[2]){
                 //if onRejected was not provided, pass val to next then/catch
                 if(isFunction(onRejected)){
@@ -502,7 +518,6 @@
                         //catch error in onRejected
                         reject(e);
                     }
-
                 }else{
                     reject(val);
                 }
@@ -539,11 +554,7 @@
                 callback = function(){
                     fn(resolve, reject);
                 };
-
-                return;
-            }
-
-            if(status === states[2]){
+            }else if(status === states[2]){
                 if(isFunction(onRejected)){
                     try{
                         val = onRejected(val);
