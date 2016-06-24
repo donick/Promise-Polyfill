@@ -4,8 +4,8 @@
  * @copyright Donick Li
  * @author Donick Li <donick.li@gmail.com>
  * @license Released under the MIT license
- * https://github.com/donick/PromisePolyfill
- * @version v1.1.1
+ * https://github.com/donick/Promise-Polyfill
+ * @version v1.1.2
  * Date: 2016-06-24T16:30Z
  */
 
@@ -21,6 +21,7 @@
  *                             B: <set next-callback with its context for A>
  *                                 A->notifyNext: timer-coming invoke all next-callbacks
  *                                     invoke B's invoke-constructor-callback
+ *                                         B: resolve or reject self with its value
  */
 
 /**
