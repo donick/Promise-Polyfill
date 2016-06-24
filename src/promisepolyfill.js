@@ -5,8 +5,8 @@
  * @author Donick Li <donick.li@gmail.com>
  * @license Released under the MIT license
  * https://github.com/donick/Promise-Polyfill
- * @version v1.1.2
- * Date: 2016-06-24T16:30Z
+ * @version v1.1.3
+ * Date: 2016-06-24T22:30Z
  */
 
 /**
@@ -15,7 +15,7 @@
  *     next-then/catch: <add-callback to A.next>
  *         next-then/catch: new-promise: B
  *             A: <invoke-constructor-callback>
- *                 A is resolved/rejected
+ *                 A become to resolved/rejected
  *                     A->notifyNext: <set timer to invoke callbacks>
  *                         B: <invoke-constructor-callback>
  *                             B: <set next-callback with its context for A>
@@ -32,7 +32,7 @@
  *             B: resolve or reject self with its value
  */
 
-(function(){
+(function() {
     'use strict';
 
     var states = ['pending', 'resolved', 'rejected'],
@@ -45,23 +45,23 @@
         exportName = 'PromisePolyfill',
         promiseInfo = {};
 
-    function hasOwnProp(o, prop){
+    function hasOwnProp(o, prop) {
         return o.hasOwnProperty(prop);
     }
 
-    function isString(o){
+    function isString(o) {
         return typeof o === 'string';
     }
 
-    function isFunction(o){
+    function isFunction(o) {
         return typeof o === 'function';
     }
 
-    function isStringOrArray(o){
+    function isStringOrArray(o) {
         return /(String|Array)/.test(Object.prototype.toString.call(o));
     }
 
-    function isThenable(o){
+    function isThenable(o) {
         return o && (typeof o.then === 'function');
     }
 
@@ -69,10 +69,11 @@
      * check global whether have native promise
      * @return {Boolean} result
      */
-    function haveNativePromise(){
+
+    function haveNativePromise() {
         var NP = G.Promise;
 
-        if(isFunction(NP) && NP.toString().indexOf('[native code]')){
+        if (isFunction(NP) && NP.toString().indexOf('[native code]')) {
             return true;
         }
 
@@ -83,8 +84,9 @@
      * get promise id
      * @return {String} promise id
      */
-    function getId(){
-        return 'promise-'+ baseId++;
+
+    function getId() {
+        return 'promise-' + baseId++;
     }
 
     /**
@@ -92,16 +94,17 @@
      * @param  {String|Object} id
      * @return {Object}    promise info
      */
-    function getInfo(id){
-        if(isString(id)){
-            if(!hasOwnProp(promiseInfo, id)){
+
+    function getInfo(id) {
+        if (isString(id)) {
+            if (!hasOwnProp(promiseInfo, id)) {
                 promiseInfo[id] = {};
             }
 
             return promiseInfo[id];
         }
 
-        if(id instanceof Promise){
+        if (id instanceof Promise) {
             return promiseInfo[id.id];
         }
     }
@@ -111,10 +114,11 @@
      * @param {String|Object} id
      * @param {Object} o
      */
-    function setInfo(id, o){
+
+    function setInfo(id, o) {
         var info = getInfo(id);
 
-        function setProp(prop){
+        function setProp(prop) {
             return hasOwnProp(o, prop) ? o[prop] : info[prop];
         }
         info.id = id;
@@ -127,12 +131,13 @@
      * Promise constructor
      * @param {Function} fn
      */
-    function Promise(fn){
-        if(!(this instanceof Promise)){
+
+    function Promise(fn) {
+        if (!(this instanceof Promise)) {
             throw err.isNotInstance;
         }
 
-        if(!isFunction(fn)){
+        if (!isFunction(fn)) {
             throw err.isNotFunction;
         }
 
@@ -145,11 +150,11 @@
             next: []
         });
 
-        function cbResolve(val){
+        function cbResolve(val) {
             var id = me.id,
                 info = getInfo(id);
 
-            if(info.status !== states[0]){
+            if (info.status !== states[0]) {
                 return;
             }
 
@@ -161,12 +166,12 @@
             notifyNext(id);
         }
 
-        function cbReject(val){
+        function cbReject(val) {
             var id = me.id,
                 info = getInfo(id),
                 followed = info.next.length;
 
-            if(info.status !== states[0]){
+            if (info.status !== states[0]) {
                 return;
             }
 
@@ -175,28 +180,28 @@
                 value: val
             });
 
-            if(!followed){
+            if (!followed) {
                 throw val;
-            }else{
+            } else {
                 notifyNext(id);
             }
         }
 
-        setTimeout(function(){
+        setTimeout(function() {
             var info = getInfo(me),
                 followed = info.next.length;
 
-            try{
-               fn(cbResolve, cbReject);
-            }catch(e){
-                if(info.status === states[1]){
+            try {
+                fn(cbResolve, cbReject);
+            } catch (e) {
+                if (info.status === states[1]) {
                     //promise had been resolved, avoid the error
                     return;
                 }
 
-                if(followed){
+                if (followed) {
                     cbReject(e);
-                }else{
+                } else {
                     throw '(in promise) ' + e;
                 }
             }
@@ -207,10 +212,11 @@
      * notify next when resolved or rejected
      * @param  {String} id promise id
      */
-    function notifyNext(id){
+
+    function notifyNext(id) {
         var next = getInfo(id).next;
 
-        while(next.length){
+        while (next.length) {
             setTimeout(next.shift(), 0);
         }
     }
@@ -220,10 +226,11 @@
      * @param  {Function} fn
      * @return {Object}      promise instance
      */
-    function factory(fn){
-        return new Promise(function(resolve, reject){
-                fn(resolve, reject);
-            });
+
+    function factory(fn) {
+        return new Promise(function(resolve, reject) {
+            fn(resolve, reject);
+        });
     }
 
     /**
@@ -231,27 +238,28 @@
      * @param  {Array|String}   o
      * @param  {Function} callback
      */
-    function handleAll(o, callback){
+
+    function handleAll(o, callback) {
         var len = o.length,
             count = len,
             vals = [],
             hadRejected = false,
             item;
 
-        function onItemChanged(result, index, val){
+        function onItemChanged(result, index, val) {
             vals[index] = val;
 
-            if(result){
-                if(--count){
+            if (result) {
+                if (--count) {
                     return;
                 }
 
                 callback(true, vals);
                 //resolve(vals);
 
-            }else{
+            } else {
                 //avoid handle second reject
-                if(hadRejected){
+                if (hadRejected) {
                     return;
                 }
 
@@ -262,35 +270,34 @@
             }
         }
 
-        if(isString(o)){
+        if (isString(o)) {
             callback(true, o.split(''));
             //resolve(o.split(''));
-        }else{
-            for(var i = 0; i < len; i++){
-                if(hadRejected){
+        } else {
+            for (var i = 0; i < len; i++) {
+                if (hadRejected) {
                     break;
                 }
 
                 item = o[i];
 
-                if(isThenable(item)){
+                if (isThenable(item)) {
                     item.then(
-                        (function(i){
-                            return function(v){
+                        (function(i) {
+                            return function(v) {
                                 onItemChanged(true, i, v);
                             };
-                        }(i)),
-                        (function(i){
-                            return function(v){
+                        }(i)), (function(i) {
+                            return function(v) {
                                 onItemChanged(false, i, v);
                             };
                         }(i)));
-                }else{
+                } else {
                     Promise.resolve({
-                            i: i,
-                            item: item
-                        })
-                        .then(function(v){
+                        i: i,
+                        item: item
+                    })
+                        .then(function(v) {
                             onItemChanged(true, v.i, v.item);
                         });
                 }
@@ -303,40 +310,41 @@
      * @param  {Array|String} o
      * @return {Object}   promise instance
      */
-    function all(o){
+
+    function all(o) {
         var callback;
 
-        if(!isStringOrArray(o)){
+        if (!isStringOrArray(o)) {
             return;
         }
 
-        handleAll(o, function(result, val){
-            if(callback){
+        handleAll(o, function(result, val) {
+            if (callback) {
                 //factory had done
                 callback(result, val);
                 return;
             }
 
-            callback = function(resolve, reject){
-                if(result){
+            callback = function(resolve, reject) {
+                if (result) {
                     resolve(val);
-                }else{
+                } else {
                     reject(val);
                 }
             };
         });
 
-        return factory(function(resolve, reject){
-            if(callback){
+        return factory(function(resolve, reject) {
+            if (callback) {
                 //all specified promises had done
                 callback(resolve, reject);
                 return;
             }
 
-            callback = function(result, val){
-                if(result){
+            callback = function(result, val) {
+                if (result) {
                     resolve(val);
-                }else{
+                } else {
                     reject(val);
                 }
             };
@@ -348,48 +356,49 @@
      * @param  {Array|String}   o
      * @param  {Function} callback
      */
-    function handleRace(o, callback){
+
+    function handleRace(o, callback) {
         var len = o.length,
             hadDone = false,
             item;
 
-        function onItemChanged(result, val){
-            if(hadDone){
+        function onItemChanged(result, val) {
+            if (hadDone) {
                 return;
             }
 
             hadDone = true;
 
-            if(result){
+            if (result) {
                 callback(true, val);
                 //resolve(val);
-            }else{
+            } else {
                 callback(false, val);
                 //reject(val);
             }
         }
 
-        if(isString(o)){
+        if (isString(o)) {
             callback(true, o.charAt(0));
             //resolve(o.charAt(0));
-        }else{
-            for(var i = 0; i < len; i++){
-                if(hadDone){
+        } else {
+            for (var i = 0; i < len; i++) {
+                if (hadDone) {
                     break;
                 }
 
                 item = o[i];
 
-                if(isThenable(item)){
+                if (isThenable(item)) {
                     item.then(
-                        function(v){
+                        function(v) {
                             onItemChanged(true, v);
                         },
-                        function(v){
+                        function(v) {
                             onItemChanged(false, v);
                         });
-                }else{
-                    Promise.resolve(item).then(function(v){
+                } else {
+                    Promise.resolve(item).then(function(v) {
                         onItemChanged(true, v);
                     });
                 }
@@ -402,40 +411,41 @@
      * @param  {Array|String} o
      * @return {Object}   promise instance
      */
-    function race(o){
+
+    function race(o) {
         var callback;
 
-         if(!isStringOrArray(o)){
+        if (!isStringOrArray(o)) {
             return;
         }
 
-        handleRace(o, function(result, val){
-            if(callback){
+        handleRace(o, function(result, val) {
+            if (callback) {
                 //factory had done
                 callback(result, val);
                 return;
             }
 
-            callback = function(resolve, reject){
-                if(result){
+            callback = function(resolve, reject) {
+                if (result) {
                     resolve(val);
-                }else{
+                } else {
                     reject(val);
                 }
             };
         });
 
-        return factory(function(resolve, reject){
-            if(callback){
+        return factory(function(resolve, reject) {
+            if (callback) {
                 //one of specified promises had done
                 callback(resolve, reject);
                 return;
             }
 
-            callback = function(result, val){
-                if(result){
+            callback = function(result, val) {
+                if (result) {
                     resolve(val);
-                }else{
+                } else {
                     reject(val);
                 }
             };
@@ -447,8 +457,9 @@
      * @param  {Object} val passed value
      * @return {Object}     promise instance
      */
-    function resolve(val){
-        return factory(function(resolve, reject){
+
+    function resolve(val) {
+        return factory(function(resolve, reject) {
             resolve(val);
         });
     }
@@ -458,8 +469,9 @@
      * @param  {Object} val passed value
      * @return {Object}     promise instance
      */
-    function reject(val){
-        return factory(function(resolve, reject){
+
+    function reject(val) {
+        return factory(function(resolve, reject) {
             reject(val);
         });
     }
@@ -471,55 +483,58 @@
      * @param  {Function} onRejected reject callback
      * @return {Object}     promise instance
      */
-    function then(onResolved, onRejected){
+
+    function then(onResolved, onRejected) {
         var me = this,
             info = getInfo(me),
             status = info.status,
-            callback = function(){};
+            callback;
 
-        if(status === states[0]){
+        if (status === states[0]) {
             //add callback to the previous promise
             //after its status changed, this callback will be invoked
-            info.next.push(function(){
-                callback();
+            info.next.push(function() {
+                if(callback){
+                    callback();
+                }
             });
         }
 
-        function fn(resolve, reject){
+        function fn(resolve, reject) {
             var info = getInfo(me),
                 status = info.status,
                 val = info.value;
 
-            if(status === states[0]){
+            if (status === states[0]) {
                 //set callback with resolve and reject of context
-                callback = function(){
+                callback = function() {
                     fn(resolve, reject);
                 };
-            }else if(status === states[1]){
-                if(isFunction(onResolved)){
-                    try{
+            } else if (status === states[1]) {
+                if (isFunction(onResolved)) {
+                    try {
                         val = onResolved(val);
 
                         handleThenable(val, resolve, reject);
-                    }catch(e){
+                    } catch (e) {
                         reject(e);
                     }
-                }else{
+                } else {
                     resolve(val);
                 }
-            }else if(status === states[2]){
+            } else if (status === states[2]) {
                 //if onRejected was not provided, pass val to next then/catch
-                if(isFunction(onRejected)){
-                    try{
+                if (isFunction(onRejected)) {
+                    try {
                         //resolved this reject, and pass val to next then
                         val = onRejected(val);
 
                         handleThenable(val, resolve, reject);
-                    }catch(e){
+                    } catch (e) {
                         //catch error in onRejected
                         reject(e);
                     }
-                }else{
+                } else {
                     reject(val);
                 }
             }
@@ -533,39 +548,42 @@
      * @param  {Function} onRejected reject callback
      * @return {Object}     promise instance
      */
-    function catch_(onRejected){
+
+    function catch_(onRejected) {
         var me = this,
             info = getInfo(me),
             status = info.status,
-            callback = function(){};
+            callback;
 
-        if(status === states[0]){
-            info.next.push(function(){
-                callback();
+        if (status === states[0]) {
+            info.next.push(function() {
+                if(callback){
+                    callback();
+                }
             });
         }
 
-        function fn(resolve, reject){
+        function fn(resolve, reject) {
             var info = getInfo(me),
                 status = info.status,
                 val = info.value;
 
-            if(status === states[0]){
+            if (status === states[0]) {
                 //set callback with resolve and reject of context
-                callback = function(){
+                callback = function() {
                     fn(resolve, reject);
                 };
-            }else if(status === states[2]){
-                if(isFunction(onRejected)){
-                    try{
+            } else if (status === states[2]) {
+                if (isFunction(onRejected)) {
+                    try {
                         val = onRejected(val);
 
                         handleThenable(val, resolve, reject);
-                    }catch(e){
+                    } catch (e) {
                         //catch error in onRejected
                         reject(e);
                     }
-                }else{
+                } else {
                     reject(val);
                 }
             }
@@ -580,16 +598,17 @@
      * @param  {Function} resolve resolver callback
      * @param  {Function} reject  rejecter callback
      */
-    function handleThenable(val, resolve, reject){
-        if(isThenable(val)){
+
+    function handleThenable(val, resolve, reject) {
+        if (isThenable(val)) {
             val.then(
-                function(v){
+                function(v) {
                     resolve(v);
                 },
-                function(v){
+                function(v) {
                     reject(v);
                 });
-        }else{
+        } else {
             resolve(val);
         }
     }
@@ -598,8 +617,8 @@
     Promise.race = race;
     Promise.reject = reject;
     Promise.resolve = resolve;
-    Promise.$info = function(P, prop){
-        if(!isThenable(P)){
+    Promise.$info = function(P, prop) {
+        if (!isThenable(P)) {
             return;
         }
 
@@ -617,10 +636,10 @@
     };
 
     //for browsers, on window or self object(worker)
-    if(G){
-        G[exportName] = function(force){
-            if(force){
-                if(haveNativePromise()){
+    if (G) {
+        G[exportName] = function(force) {
+            if (force) {
+                if (haveNativePromise()) {
                     //if have native promise, choose native promise
                     return G.Promise;
                 }
@@ -640,7 +659,7 @@
     }
 
     //as CommonJS/node module
-    if(typeof module === 'object' && typeof module.exports === 'object'){
+    if (typeof module === 'object' && typeof module.exports === 'object') {
         module.exports = Promise;
     }
 }).call(this);
