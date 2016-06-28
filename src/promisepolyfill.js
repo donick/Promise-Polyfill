@@ -11,25 +11,29 @@
 
 /**
  * work-fllow: pending
- * new-promise: A <return A instance>
- *     next-then/catch: <add-callback to A.next>
- *         next-then/catch: new-promise: B
- *             A: <invoke-constructor-callback>
- *                 A become to resolved/rejected
- *                     A->notifyNext: <set timer to invoke callbacks>
- *                         B: <invoke-constructor-callback>
- *                             B: <set next-callback with its context for A>
- *                                 A->notifyNext: timer-coming invoke all next-callbacks
- *                                     invoke B's invoke-constructor-callback
- *                                         B: resolve or reject self with its value
+ * new-promise: A   1. register setTimout [[A:T1]] to invoke constructor-callback for awhile
+ *                  2. return A
+ *     next-then/catch: 1. add an empty-callback to <A.next>
+ *                      2. return new-promise: B  
+ *                      3. register setTimout [[B:T2]] to invoke constructor-callback for awhile
+ *             [[A:T1]]->   1. constructor-callback
+ *                          2. A become to resolved/rejected
+ *                          3. call notifyNext
+ *                     A->notifyNext: setTimout [[AN:TT]] for each callbacks in <A.next>
+ *                              [[B:T2]]->   1. invoke constructor-callback
+ *                                           2. reset next-callback with B's constructor-callback
+ *                                      [[AN:TT]]   1. invoke next-callbacks
+*                                                   2. invoke B's constructor-callback
+ *                                                  3. resolve or reject self with its value
  */
 
 /**
  * work-fllow: resolved/rejected
- * A.then: A is resolved/rejected
- *     next-then/catch: new-promise: B
- *         B: <invoke-constructor-callback>
- *             B: resolve or reject self with its value
+ * A is resolved/rejected
+ *     next-then/catch: 1. return new-promise: B
+ *                      2. register setTimout [[B:T1]] to invoke constructor-callback for awhile
+ *          [[B:T1]]    1. invoke constructor-callback
+ *                      2. resolve or reject self with its value
  */
 
 (function() {
